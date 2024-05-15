@@ -27,11 +27,15 @@ const DetailPlanet = props => {
   useEffect(() => {
     getPlanetId();
     checkWishlist(urlplanet);
-  }, []);
+  }, [urlplanet]);
 
   const checkWishlist = async url => {
     const wishlist = await AsyncStorage.getItem('wishlist');
-    setIsWishlist(wishlist && JSON.parse(wishlist).includes(url));
+    // setIsWishlist(wishlist && JSON.parse(wishlist).includes(url));
+    if (wishlist) {
+      const wishlistArray = JSON.parse(wishlist);
+      setIsWishlist(wishlistArray.includes(url));
+    }
   };
 
   const getPlanetId = () => {
@@ -59,7 +63,8 @@ const DetailPlanet = props => {
     if (isWishlist) {
       wishlistArray = wishlistArray.filter(item => item !== urlplanet);
     } else {
-      wishlistArray.push({...planetData});
+      // wishlistArray.push({...planetData});
+      wishlistArray.push({...(urlplanet && planetData)});
     }
 
     await AsyncStorage.setItem('wishlist', JSON.stringify(wishlistArray));
