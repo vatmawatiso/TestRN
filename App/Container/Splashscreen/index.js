@@ -13,11 +13,11 @@ import {toDp} from '../../Helpers/PercentageToDP';
 import NavigatorService from '../../Helpers/NavigatorServices';
 import Kembali from '../../Component/Kembali';
 
-const Homepage = props => {
+const Splashscreen = props => {
   return (
     <View style={styles.container}>
       <View style={{justifyContent: 'flex-end', flexDirection: 'row'}}>
-        <TouchableOpacity onPress={() => NavigatorService.reset('Film')}>
+        <TouchableOpacity onPress={() => NavigatorService.reset('Planets')}>
           <Text
             style={{
               color: '#FFF',
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Homepage;
+export default Splashscreen;

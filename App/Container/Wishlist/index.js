@@ -1,225 +1,92 @@
 import React, {useState, useEffect} from 'react';
 import {
-  SafeAreaView,
   View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  TouchableOpacity,
   FlatList,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import {allLogo} from '../../Assets';
 import {toDp} from '../../Helpers/PercentageToDP';
-import NavigatorService from '../../Helpers/NavigatorServices';
-import Kembali from '../../Component/Kembali';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Kembali from '../../Component/Kembali';
+import NavigatorService from '../../Helpers/NavigatorServices';
 
 const Wishlist = props => {
-  const [state, setState] = useState({
-    climate: '',
-    diameter: '',
-    gravity: '',
-    name: '',
-    rotation_period: '',
-    population: '',
-    orbital_period: '',
-    surface_water: '',
-    terrain: '',
-    planetId: '',
-    urll: '',
-    films: '',
-    residents: '',
-    datas: '',
-    urlWish: '',
-    id_url: '',
-  });
+  const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
-    AsyncStorage.getItem('id')
-      .then(url => {
-        let idURL = url;
-        setState(state => ({
-          ...state,
-          id_url: idURL,
-        }));
-        console.log('id URL = ', state.id_url);
-        let id = state.id_url;
-        console.log(id);
-      })
-      .catch(err => {
-        console.log('err', err);
-      });
-
-    getWislistPerID();
-    // getWislistPer();
+    const fetchWishlist = async () => {
+      try {
+        const storedWishlist = await AsyncStorage.getItem('wishlist');
+        // console.log('cek wishlist => ', storedWishlist);
+        if (storedWishlist) {
+          setWishlist(JSON.parse(storedWishlist));
+        }
+      } catch (error) {
+        console.log('Error fetching wishlist from AsyncStorage:', error);
+      }
+    };
+    fetchWishlist();
   }, []);
 
-  // get All Planet
-  const getWislistPer = () => {
-    axios
-      .get('https://swapi.dev/api/planets/', {
-        headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YmMzMTdlZDNjMGYyMjVlNGQyZjk2Y2Q2MzZmZGQyYyIsInN1YiI6IjY1MWUzYzY2ZjA0ZDAxMDEzOTRhYjlkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Gwt0pSuZTRCPXhayzYd05Fdb7nyqIY5SLXvBf4mvLa4',
-        },
-      })
-      .then(res => {
-        console.log('Hasil Planet All = ', res.data);
-        if (res.status == 200) {
-          setState(state => ({
-            ...state,
-            datas: res.data.results,
-          }));
-          console.log('hasil planet = ', state.datas);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  // get data per id
-  const getWislistPerID = () => {
-    AsyncStorage.getItem('id').then(url => {
-      let id = url;
-      console.log('cek id = ', id);
-      axios
-        .get('https://swapi.dev/api/planets/1/', {
-          headers: {
-            Authorization:
-              'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YmMzMTdlZDNjMGYyMjVlNGQyZjk2Y2Q2MzZmZGQyYyIsInN1YiI6IjY1MWUzYzY2ZjA0ZDAxMDEzOTRhYjlkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Gwt0pSuZTRCPXhayzYd05Fdb7nyqIY5SLXvBf4mvLa4',
-          },
-        })
-        .then(res => {
-          console.log('Hasil Planet All = ', res.data);
-          if (res.status == 200) {
-            setState(state => ({
-              ...state,
-              dataswis: res.data.result,
-            }));
-            console.log('hasil planet = ', state.dataswis);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    });
-  };
-
-  const renderData = (item, index) => {
-    console.log('cek item  ==> ', item);
-    console.log('cek film  ==> ', item.name);
+  const renderPlanet = ({item}) => {
+    console.log('item => ', item.urlWish);
+    let idurl = item.urlWish;
+    // let id = idurl.charAt(idurl.length - 2);
     return (
-      <View style={styles.card}>
-        <Text>hmmmmm</Text>
-        <TouchableOpacity style={styles.btnMovie}>
-          <View style={styles.bodyDetail}>
-            <Image
-              source={allLogo.nm_planet}
-              style={{
-                width: toDp(135),
-                height: toDp(150),
-                borderRadius: toDp(5),
-              }}
-            />
+      <TouchableOpacity style={styles.card}>
+        <View style={styles.bodyDetail}>
+          <Image source={allLogo.nm_planet} style={styles.planetImage} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.planetName}>Planet {item.name}</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Periode Rotasi</Text>
+            <Text style={styles.infoValue}>{item.rotation_period}</Text>
           </View>
-          <View style={{margin: toDp(5)}}>
-            <Text
-              style={{
-                fontSize: toDp(18),
-                color: '#eb8c74',
-                width: toDp(150),
-                fontWeight: 'bold',
-              }}>
-              Planet {item.name}
-            </Text>
-
-            <View
-              style={{
-                borderWidth: 0.5,
-                width: toDp(100),
-                borderColor: '#eb8c74',
-                flexDirection: 'row',
-              }}>
-              <Text style={{textAlign: 'center', color: '#eb8c74'}}>
-                Periode Rotasi
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: '#eb8c74',
-                  backgroundColor: '#FFF',
-                  width: toDp(25),
-                  left: toDp(5),
-                }}>
-                {item.rotation_period}
-              </Text>
-            </View>
-
-            <View style={{flexDirection: 'row', top: toDp(5)}}>
-              <Text style={{color: '#eb8c74'}}>Diameter </Text>
-              <Text
-                style={{
-                  fontSize: toDp(13),
-                  color: '#eb8c74',
-                  width: toDp(150),
-                  fontWeight: 'bold',
-                  backgroundColor: '#FFF',
-                  width: toDp(50),
-                  textAlign: 'center',
-                  color: '#eb8c74',
-                  justifyContent: 'center',
-                }}>
-                {item.diameter}
-              </Text>
-            </View>
-
-            <Text
-              style={{
-                fontSize: toDp(16),
-                color: '#F6F1F1',
-                width: toDp(150),
-              }}>
-              {item.release_date}
-            </Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Diameter</Text>
+            <Text style={styles.infoValue}>{item.diameter}</Text>
+          </View>
+        </View>
+        <TouchableOpacity onPress={() => deleteItem(item)}>
+          <View style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     );
+  };
+
+  // Buat fungsi deleteItem di halaman Wishlist
+  const deleteItem = async item => {
+    console.log('item.planetId (ISI SAMA 1 data terpilih) ==> ', item.planetId);
+    console.log('item (ISI SAMA 1 data terpilih) ==> ', item);
+    const storedWishlist = await AsyncStorage.getItem('wishlist');
+    let wishlistArray = storedWishlist ? JSON.parse(storedWishlist) : [];
+    console.log('cek del = ', wishlistArray);
+    wishlistArray = wishlistArray.filter(
+      wishlistItem => wishlistItem.planetId !== item.planetId,
+    );
+    console.log('cek wish item (ISI SEMUA DATA) = ', wishlistArray);
+    await AsyncStorage.setItem('wishlist', JSON.stringify(wishlistArray));
+    setWishlist(wishlistArray);
   };
 
   return (
     <View style={styles.container}>
       <Kembali
         title={'Wishlist'}
-        onPress={() => props.navigation.navigate('DetailFilm')}
+        onPress={() => NavigatorService.navigate('DetailPlanet')}
       />
-
-      <Text style={{color: 'white'}}>cobaaa</Text>
-
-      {/* <SafeAreaView style={styles.container}>
-        <FlatList
-          data={state.datas}
-          keyExtractor={state.id_url}
-          renderItem={({item}) => <Text>{item.name}</Text>}
-        />
-      </SafeAreaView> */}
-
       <FlatList
-        contentContainerStyle={{
-          justifyContent: 'space-between',
-          // backgroundColor: '#000000',
-        }}
+        contentContainerStyle={styles.flatListContainer}
+        data={wishlist}
+        renderItem={renderPlanet}
+        keyExtractor={(item, index) => index.toString()}
         numColumns={2}
-        data={state.datas}
-        renderItem={({item, index}) => {
-          return renderData(item, index);
-        }}
-        ListFooterComponent={() => (
-          <View style={{height: toDp(120), width: toDp(30)}} />
-        )}
       />
     </View>
   );
@@ -229,19 +96,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#191a32',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: toDp(10),
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    paddingVertical: toDp(5),
+    paddingHorizontal: toDp(10),
+    borderRadius: toDp(5),
+    marginTop: toDp(5),
+  },
+  deleteButtonText: {
+    color: 'white',
+  },
+  flatListContainer: {
+    justifyContent: 'space-between',
   },
   card: {
-    bottom: toDp(5),
     backgroundColor: '#FFF',
     borderRadius: toDp(10),
-    minHeight: toDp(220),
-    textAlign: 'center',
-    justifyContent: 'center',
-    marginLeft: toDp(8),
-    // opacity: 0.7,
-    width: '46%',
+    margin: toDp(8),
+    flex: 1,
+    elevation: toDp(5),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -249,22 +124,45 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
-
-    elevation: 5,
-    marginTop: toDp(10),
-    alignItems: 'center',
-    marginHorizontal: toDp(3.5),
   },
   bodyDetail: {
-    bottom: toDp(1),
-    height: toDp(170),
-    width: toDp(163),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    // borderRadius: toDp(10),
+    height: toDp(140),
+    width: '100%',
     borderTopLeftRadius: toDp(10),
     borderTopRightRadius: toDp(10),
+    overflow: 'hidden',
+  },
+  planetImage: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: toDp(10),
+    borderTopRightRadius: toDp(10),
+  },
+  textContainer: {
+    padding: toDp(10),
+  },
+  planetName: {
+    fontSize: toDp(18),
+    color: '#eb8c74',
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: toDp(5),
+  },
+  infoLabel: {
+    fontSize: toDp(14),
+    color: '#eb8c74',
+  },
+  infoValue: {
+    fontSize: 14,
+    color: '#FFF',
+    backgroundColor: '#eb8c74',
+    paddingHorizontal: toDp(5),
+    borderRadius: toDp(5),
   },
 });
 

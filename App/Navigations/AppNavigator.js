@@ -2,32 +2,28 @@ import {createAppContainer} from 'react-navigation';
 // import {createAppContainer} from '@react-navigation/native';
 import {createStackNavigator} from 'react-navigation-stack';
 
-import Home from '../Container/Home';
-import Film from '../Container/Film';
-import DetailFilm from '../Container/DetailFilm';
-import Homepage from '../Container/Homepage';
+import Planets from '../Container/Planets';
+import DetailPlanet from '../Container/DetailPlanet';
+import Splashscreen from '../Container/Splashscreen';
 import Wishlist from '../Container/Wishlist';
 
 const AppNavigator = createStackNavigator(
   {
-    Home: {
-      screen: Home,
+    Planets: {
+      screen: Planets,
     },
-    Film: {
-      screen: Film,
+    DetailPlanet: {
+      screen: DetailPlanet,
     },
-    DetailFilm: {
-      screen: DetailFilm,
-    },
-    Homepage: {
-      screen: Homepage,
+    Splashscreen: {
+      screen: Splashscreen,
     },
     Wishlist: {
       screen: Wishlist,
     },
   },
   {
-    initialRouteName: 'Homepage',
+    initialRouteName: 'Splashscreen',
     headerMode: 'none',
   },
 );

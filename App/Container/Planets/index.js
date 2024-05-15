@@ -18,7 +18,7 @@ import axios from 'axios';
 import Kembali from '../../Component/Kembali';
 // import LinearGradient from 'react-native-linear-gradient';
 
-const Film = props => {
+const Planets = props => {
   const [state, setState] = useState({
     genre: [],
     genreId: '',
@@ -68,7 +68,7 @@ const Film = props => {
     films,
     index,
   ) => {
-    NavigatorService.navigate('DetailFilm', {
+    NavigatorService.navigate('DetailPlanet', {
       climate: climate,
       diameter: diameter,
       gravity: gravity,
@@ -121,7 +121,7 @@ const Film = props => {
             <Text
               style={{
                 fontSize: toDp(18),
-                color: '#FFF',
+                color: '#eb8c74',
                 width: toDp(150),
                 fontWeight: 'bold',
               }}>
@@ -130,39 +130,46 @@ const Film = props => {
 
             <View
               style={{
-                borderWidth: 0.5,
-                width: toDp(100),
-                borderColor: '#FFF',
                 flexDirection: 'row',
+                top: toDp(5),
+                justifyContent: 'space-between',
+                marginBottom: toDp(5),
               }}>
-              <Text style={{textAlign: 'center', color: '#FFF'}}>
-                Periode Rotasi
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: '#eb8c74',
-                  backgroundColor: '#FFF',
-                  width: toDp(25),
-                  left: toDp(5),
-                }}>
-                {item.rotation_period}
-              </Text>
-            </View>
-
-            <View style={{flexDirection: 'row', top: toDp(5)}}>
-              <Text style={{color: '#FFF'}}>Diameter </Text>
+              <Text style={{color: '#eb8c74'}}>Rotation Period</Text>
               <Text
                 style={{
                   fontSize: toDp(13),
                   color: '#FFF',
                   width: toDp(150),
                   fontWeight: 'bold',
-                  backgroundColor: '#FFF',
+                  backgroundColor: '#eb8c74',
+                  width: toDp(30),
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                  borderRadius: toDp(5),
+                }}>
+                {item.rotation_period}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                top: toDp(5),
+                justifyContent: 'space-between',
+              }}>
+              <Text style={{color: '#eb8c74'}}>Diameter </Text>
+              <Text
+                style={{
+                  fontSize: toDp(13),
+                  color: '#FFF',
+                  width: toDp(150),
+                  fontWeight: 'bold',
+                  backgroundColor: '#eb8c74',
                   width: toDp(50),
                   textAlign: 'center',
-                  color: '#eb8c74',
                   justifyContent: 'center',
+                  borderRadius: toDp(5),
                 }}>
                 {item.diameter}
               </Text>
@@ -185,8 +192,8 @@ const Film = props => {
   return (
     <View style={styles.container}>
       <Kembali
-        title={'Movie'}
-        onPress={() => props.navigation.navigate('Homepage')}
+        title={'Planets'}
+        onPress={() => props.navigation.navigate('Splashscreen')}
       />
 
       <FlatList
@@ -221,7 +228,7 @@ const styles = StyleSheet.create({
   },
   card: {
     bottom: toDp(5),
-    backgroundColor: '#3a3a4f',
+    backgroundColor: '#FFF',
     borderRadius: toDp(10),
     minHeight: toDp(220),
     textAlign: 'center',
@@ -255,4 +262,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Film;
+export default Planets;
